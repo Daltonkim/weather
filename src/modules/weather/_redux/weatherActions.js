@@ -49,8 +49,12 @@ export const fetchSevenDayForeCastServiceOne = (lat, long) => dispatch => {
     .getSevenDayForecastByNameServiceOne(lat, long)
     .then(response => {
       const { daily } = response.data
-
-      dispatch(actions.weatherFetchedServiceOneSevenDayForecast({ weatherForSevenDayForecastServiceOne: daily }));
+      const changeData = daily && daily.slice(0,4).map(item => {
+        return (
+          item?.temp.day
+        )
+      })
+      dispatch(actions.weatherFetchedServiceOneSevenDayForecast({ weatherForSevenDayForecastServiceOne: changeData }));
     })
     .catch(error => {
       error.clientMessage = "Can't find weather";
@@ -68,7 +72,12 @@ export const fetchSevenDayForeCastServiceTwo = (lat, long) => dispatch => {
     .getSevenDayForecastByNameServiceTwo(lat, long)
     .then(response => {
       const { data: { timelines } } = response.data
-      dispatch(actions.weatherFetchedServiceTwoSevenDayForecast({ weatherForSevenDayForecastServiceTwo: timelines[0]?.intervals }));
+      const changeData = timelines && timelines[0]?.intervals.slice(0,4).map(item => {
+        return (
+          item?.values.temperature
+        )
+      })
+      dispatch(actions.weatherFetchedServiceTwoSevenDayForecast({ weatherForSevenDayForecastServiceTwo: changeData }));
     })
     .catch(error => {
       error.clientMessage = "Can't find weather";
@@ -87,8 +96,6 @@ export const fetchAllSuggestions = name => dispatch => {
     .getAllSuggestions(name)
     .then(response => {
       const { list } = response.data;
-
-      console.log(list)
       dispatch(actions.allsuggestionsFetched({ suggestions: list && list }));
     })
     .catch(error => {

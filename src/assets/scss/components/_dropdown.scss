@@ -52,7 +52,7 @@ input {
     box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
 }
 
-.search input:focus ~ .results { display: block !important }
+// .search input:focus ~ .results { display: block !important }
 
 .search .results {
     display: block;

@@ -1,15 +1,13 @@
-import React, { Component } from "react";
-import Chart from "react-apexcharts";
+import React, { useEffect, useState } from "react";
+import { VerticalBarChart } from "./VerticalBarChart";
 
 function GetDates(startDate, daysToAdd) {
   var aryDates = [];
-
   for (var i = 0; i <= daysToAdd; i++) {
     var currentDate = new Date();
     currentDate.setDate(startDate.getDate() + i);
     aryDates.push(DayAsString(currentDate.getDay()) + ", " + currentDate.getDate() + " " + MonthAsString(currentDate.getMonth()) + " " + currentDate.getFullYear());
   }
-
   return aryDates;
 }
 
@@ -48,51 +46,39 @@ function DayAsString(dayIndex) {
 var startDate = new Date();
 var aryDates = GetDates(startDate, 3);
 
-class WeatherChart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      options: {
-        chart: {
-          id: "basic-bar"
-        },
-        xaxis: {
-          categories: aryDates
-        }
-      },
-      series: [
-        {
-          name: "Service one",
-          data: [30, 40, 45, 50, 49, 60, 70, 91].slice(0, 4)
-        },
-        {
-          name: "Service two",
-          data: [30, 40, 45, 50, 49, 60, 70, 91].slice(0, 4)
-        }
-      ]
-    };
-  }
+const WeatherChart = ({ weatherForSevenDayForecastServiceOne, weatherForSevenDayForecastServiceTwo }) => {
 
-  componentDidMount() {
+  const [series, setSeries] = useState([
+    {
+      name: "Service one",
+      data: []
+    },
+    {
+      name: "Service two",
+      data: []
+    }
+  ]
+  )
 
-    console.log(this.props.weatherForSevenDayForecastServiceOne)
-    console.log(this.props.weatherForSevenDayForecastServiceTwo)
+  useEffect(() => {
+    // if (weatherForSevenDayForecastServiceOne !== null) {
+      let chartone = weatherForSevenDayForecastServiceOne
+      let newArr = [...series]; 
+      newArr[0].data = chartone;
+      setSeries(newArr);
 
-  }
+      let chartTwo = weatherForSevenDayForecastServiceTwo
+      newArr[1].data = chartTwo;
+      setSeries(newArr);
+    // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherForSevenDayForecastServiceOne, weatherForSevenDayForecastServiceTwo])
 
-  render() {
-    return (
-      <div className="row">
-        <div className="mixed-chart">
-          <Chart
-            options={this.state.options}
-            series={this.state.series}
-            type="bar"
-          />
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className="row">
+      <VerticalBarChart arrayDates={aryDates} series={series}/>
+    </div>
+  );
 }
 
 export default WeatherChart;

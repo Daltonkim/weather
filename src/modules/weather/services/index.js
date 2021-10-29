@@ -13,12 +13,13 @@ const Service = () => {
         <>
             <div className="service">
                 <div className="service__one">
+                    {actionsLoading && <p>loading</p>}
                     <h1>Service One</h1>
                     <h2>{weatherForServiceOne && weatherForServiceOne.name}</h2>
 
                     <div className="service__one-wrapper">
                         <div className="service__one-town">
-                            {weatherForServiceOne?.main?.temp}  degrees celsius
+                            {weatherForServiceOne?.main?.temp} °C
                         </div>
                         <div className="service__one-details">
                             <div className="service__one-humidity">
@@ -28,7 +29,7 @@ const Service = () => {
                                 Wind: speed : {weatherForServiceOne?.wind.speed}
                             </div>
                             <div className="service__one-precipitation">
-                                Precipitation: 53%
+                            Cloud Cover: {weatherForServiceTwo?.clouds?.all}%
                             </div>
                         </div>
                     </div>
@@ -38,7 +39,7 @@ const Service = () => {
                     <h2>{weatherForServiceOne && weatherForServiceOne.name}</h2>
                     <div className="service__two-wrapper">
                         <div className="service__two-town">
-                            {weatherForServiceTwo?.temperature} degrees celsius
+                            {weatherForServiceTwo?.temperature} °C
                         </div>
                         <div className="service__two-details">
                             <div className="service__one-humidity">

@@ -21,7 +21,7 @@
 
         &-town {
             width: 50%;
-            font-size: 50px;
+            font-size: 20px;
             background: #603b00;
             padding: 39px;
             border-radius: 10px;
@@ -29,6 +29,7 @@
 
         &-details {
             width: 50%;
+            margin: 27px;
            
         }
 
@@ -49,7 +50,7 @@
 
         &-town {
             width: 50%;
-            font-size: 50px;
+            font-size: 20px;
             background: #603b00;
             padding: 39px;
             border-radius: 10px;
@@ -57,6 +58,7 @@
 
         &-details {
             width: 50%;
+            margin: 27px;
         }
     }
 }

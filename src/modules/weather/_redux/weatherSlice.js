@@ -26,7 +26,6 @@ export const weatherSlice = createSlice({
     catchError: (state, action) => {
       state.error = `${action.type}: ${action.payload.error}`;
       if (action.payload.callType === callTypes.list) {
-        console.log(action.payload.error.response)
         state.listLoading = false;
       } else {
         state.actionsLoading = false;
@@ -48,14 +47,14 @@ export const weatherSlice = createSlice({
       state.error = null;
     },
 
-     // getWeatherByName
+     // getWeatherByName 
      weatherFetchedServiceTwo: (state, action) => {
       state.actionsLoading = false;
       const { weatherForServiceTwo} = action.payload;
       state.weatherForServiceTwo = weatherForServiceTwo;
       state.error = null;
     },
-     // getWeatherByName
+     // getWeatherByName Service One
      weatherFetchedServiceOneSevenDayForecast: (state, action) => {
       state.actionsLoading = false;
       const { weatherForSevenDayForecastServiceOne } = action.payload;
@@ -63,18 +62,18 @@ export const weatherSlice = createSlice({
       state.error = null;
     },
 
-     // getWeatherByName
+     // getWeatherByName Service Two
      weatherFetchedServiceTwoSevenDayForecast: (state, action) => {
       state.actionsLoading = false;
       const { weatherForSevenDayForecastServiceTwo} = action.payload;
       state.weatherForSevenDayForecastServiceTwo = weatherForSevenDayForecastServiceTwo;
       state.error = null;
     },
-    // getWeatherByName
+    // getSuggestions
     allsuggestionsFetched: (state, action) => {
       const { suggestions } = action.payload;
-      console.log(suggestions)
       state.listLoading = false;
+      state.actionsLoading = false;
       state.error = null;
       state.suggestions = suggestions;
     },

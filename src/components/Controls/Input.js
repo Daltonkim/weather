@@ -1,4 +1,3 @@
-import React from "react";
 import { FieldFeedbackLabel } from "./FieldFeedbackLabel";
 
 const getFieldCSSClasses = (touched, errors) => {
@@ -28,7 +27,7 @@ export function Input({
       {/* {label && <label>Enter {label}</label>} */}
       <input
         type={type}
-        // className={getFieldCSSClasses(touched[field.name], errors[field.name])}
+        className={getFieldCSSClasses(touched[field.name], errors[field.name])}
         {...field}
         {...props}
       />

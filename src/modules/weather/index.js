@@ -1,53 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as actions from "./_redux/weatherActions";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { Field, Formik } from "formik";
 import { Input } from "../../components/Controls/Input";
 import Service from "./services";
-import { Link } from "react-router-dom";
 import WeatherChart from "../../components/Chart";
 
 function Weather() {
-	const [loading, setLoading] = useState(false);
+	const [display, setDisplay] = useState(false);
+	const [name, setName] = useState("");
 
 	// Getting curret state list from store (Redux)
 	const { currentState } = useSelector(
 		(state) => ({ currentState: state.weather }),
 		shallowEqual
 	);
-	const { weatherForServiceOne, weatherForServiceTwo , actionsLoading, suggestions = [], weatherForSevenDayForecastServiceOne, weatherForSevenDayForecastServiceTwo } = currentState;
+	const {
+		actionsLoading,
+		suggestions = [],
+		weatherForSevenDayForecastServiceOne,
+		weatherForSevenDayForecastServiceTwo,
+	} = currentState;
+	console.log(actionsLoading);
+
+	useEffect(() => {
+		if (suggestions.length !== 0 && name !== "") {
+			setDisplay(true);
+		} else if (name === "") {
+			setDisplay(false);
+		} else {
+			setDisplay(true);
+		}
+		console.log(name);
+	}, [suggestions, display, name]);
 
 	const dispatch = useDispatch();
 
 	const fetchWeatherByName = (city, coord) => {
 		dispatch(actions.fetchWeatherServiceOne(city));
 		dispatch(actions.fetchWeatherServiceTwo(coord?.lat, coord?.lon));
-		dispatch(actions.fetchSevenDayForeCastServiceOne(weatherForServiceOne?.coord?.lat, weatherForServiceOne?.coord?.lon ));
-		dispatch(actions.fetchSevenDayForeCastServiceTwo(weatherForServiceTwo?.coord?.lat, weatherForServiceTwo?.coord?.lon ));
+		dispatch(actions.fetchAllSuggestions());
+		dispatch(actions.fetchSevenDayForeCastServiceOne(coord?.lat, coord?.lon));
+		dispatch(actions.fetchSevenDayForeCastServiceTwo(coord?.lat, coord?.lon));
+		// 5 second interval
+		// setInterval(() => {
+		// 	dispatch(actions.fetchWeatherServiceOne(city));
+		// 	dispatch(actions.fetchWeatherServiceTwo(coord?.lat, coord?.lon));
+		// 	dispatch(actions.fetchAllSuggestions())
+		// 	dispatch(actions.fetchSevenDayForeCastServiceOne(coord?.lat, coord?.lon));
+		// 	dispatch(actions.fetchSevenDayForeCastServiceTwo(coord?.lat, coord?.lon));
+
+		// }, 5000);
 	};
 
 	return (
 		<>
+			{actionsLoading && <p>loading</p>}
 			<section className="search">
 				<Formik
 					enableReinitialize={true}
-					initialValues={{ city: '' }}
+					initialValues={{ city: "" }}
 					onSubmit={(values) => {
-						dispatch(actions.fetchAllSuggestions(values.city && values.city))
+						dispatch(actions.fetchAllSuggestions(values.city && values.city));
 					}}
 				>
-					{({ values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting }) => (
+					{({
+						values,
+						errors,
+						touched,
+						handleBlur,
+						setFieldValue,
+						handleChange,
+						handleSubmit,
+						isSubmitting,
+					}) => (
 						<>
 							<Field
 								name="city"
 								value={values.city}
-								autoComplete='off'
+								autoComplete="off"
 								component={Input}
-								onChange={handleChange}
+								onChange={(e) => {
+									setFieldValue("city", e.target.value);
+									setName(e.target.value);
+								}}
 								onBlur={handleBlur}
 								placeholder="City/Town"
 								label="City/Town"
-								className={touched.city && errors.city ? 'error' : null}
+								className={touched.city && errors.city ? "error" : null}
 							/>
 
 							<button
@@ -60,11 +100,17 @@ function Weather() {
 						</>
 					)}
 				</Formik>
-				<ul className="results">
+				<ul
+					className="results"
+					style={{ display: `${display === true ? "block" : "none"}` }}
+				>
 					{suggestions &&
-						suggestions.map((item) => {
+						suggestions.map((item, i) => {
 							return (
-								<li onClick={() => fetchWeatherByName(item.name, item.coord)}>
+								<li
+									key={i}
+									onClick={() => fetchWeatherByName(item.name, item.coord)}
+								>
 									{item.name}
 									<br />
 									<span>
@@ -76,10 +122,17 @@ function Weather() {
 				</ul>
 			</section>
 			<Service />
-			<WeatherChart  weatherForSevenDayForecastServiceOne={weatherForSevenDayForecastServiceOne && weatherForSevenDayForecastServiceOne} weatherForSevenDayForecastServiceTwo={weatherForSevenDayForecastServiceTwo && weatherForSevenDayForecastServiceTwo}/>
+			<WeatherChart
+				weatherForSevenDayForecastServiceOne={
+					weatherForSevenDayForecastServiceOne
+				}
+				weatherForSevenDayForecastServiceTwo={
+					weatherForSevenDayForecastServiceTwo &&
+					weatherForSevenDayForecastServiceTwo
+				}
+			/>
 		</>
 	);
-
 }
 
 export default Weather;
