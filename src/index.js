@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './assets/scss/style.scss';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import store, { persistor } from "./redux/store";
+
+const { PUBLIC_URL } = process.env;
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App store={store} persistor={persistor} basename={PUBLIC_URL} />
   </React.StrictMode>,
   document.getElementById('root')
 );
